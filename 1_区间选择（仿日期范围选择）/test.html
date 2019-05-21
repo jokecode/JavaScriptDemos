@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>1_区间选择（仿日期范围选择）</title>
+  <style>
+    html {
+      font-family: sans-serif;
+      background: #ffc600;
+    }
+
+    .inbox {
+      max-width: 1076px;
+      margin: 50px auto;
+      background: white;
+      border-radius: 5px;
+      box-shadow: 10px 10px 0 rgba(0, 0, 0, 0.1);
+    }
+
+    .item {
+      display: flex;
+      align-items: center;
+      border-right: 1px solid #F1F1F1;
+      border-left: 1px solid #F1F1F1;
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    .item:last-child {
+      border-right: 0;
+    }
+    .item:first-child {
+      border-left: 0;
+    }
+
+    .am-content {
+      display: inline-flex;
+    }
+    .pm-content {
+      display: inline-flex;
+    }
+    .click-bg-color {
+      background-color: greenyellow;
+    }
+  </style>
+</head>
+<body>
+
+<div id="app">
+  <div class="inbox">
+    <div class="am-content">
+      <div :key="'am' + index" v-for="(item, index) in amTimeList" class="item" @click="handleCheck">{{item.time}}</div>
+    </div>
+  </div>
+  <div class="inbox">
+    <div class="pm-content">
+      <div :key="'pm' + index" v-for="(item, index) in pmTimeList" class="item" @click="handleCheck">{{item.time}}</div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript" src="../js/Vue_V2.5.0/vue.js"></script>
+<script>
+var app=new Vue({
+  el:'#app',
+  data:{
+    amTimeList: [
+      {
+        time: '08:00'
+      },
+      {
+        time: '08:15'
+      },
+      {
+        time: '08:30'
+      },
+      {
+        time: '08:45'
+      },
+      {
+        time: '09:00'
+      },
+      {
+        time: '09:15'
+      },
+      {
+        time: '09:30'
+      },
+      {
+        time: '09:45'
+      },
+      {
+        time: '10:00'
+      },
+      {
+        time: '10:15'
+      },
+      {
+        time: '10:30'
+      },
+      {
+        time: '10:45'
+      },
+      {
+        time: '11:00'
+      },
+      {
+        time: '11:15'
+      },
+      {
+        time: '11:30'
+      },
+      {
+        time: '11:45'
+      },
+      {
+        time: '12:00'
+      }
+    ],
+    pmTimeList: [
+      {
+        time: '12:15'
+      },
+      {
+        time: '12:30'
+      },
+      {
+        time: '12:45'
+      },
+      {
+        time: '13:00'
+      },
+      {
+        time: '13:15'
+      },
+      {
+        time: '13:30'
+      },
+      {
+        time: '13:45'
+      },
+      {
+        time: '14:00'
+      },
+      {
+        time: '14:15'
+      },
+      {
+        time: '14:30'
+      },
+      {
+        time: '14:45'
+      },
+      {
+        time: '15:00'
+      },
+      {
+        time: '15:15'
+      },
+      {
+        time: '15:30'
+      },
+      {
+        time: '15:45'
+      },
+      {
+        time: '16:00'
+      },
+      {
+        time: '16:15'
+      }
+    ]
+  },
+  mounted() {
+  },
+  methods: {
+    handleCheck(event) {
+      let isExistStartFlag = false;
+      let isExistEnd = false;
+      let tempExistBgColorList = [];
+      let startItemIndex;
+      let endItemIndex;
+      for (let i = 0; i < event.target.parentElement.children.length; i++){
+        let item = event.target.parentElement.children[i];
+        if (item.classList.contains('click-bg-color')) {
+          tempExistBgColorList.push(item)
+        }
+        if (item.classList.contains('checked-end')) {
+          isExistEnd = true
+        } else if (item.classList.contains('checked-start')) {
+          isExistStartFlag = true
+          startItemIndex = i;
+        }
+        if (item === event.target && !item.classList.contains('checked-end')) {
+          endItemIndex = i;
+        }
+      }
+      // 存在结束标记
+      if (isExistEnd) {
+        tempExistBgColorList.forEach(item => {
+          item.classList.remove('checked-end')
+          item.classList.remove('checked-start')
+          item.classList.remove('click-bg-color')
+        })
+      }
+      // 开始表姐和结束标记都存在
+      if (isExistStartFlag && isExistEnd) {
+        event.target.classList.add('click-bg-color')
+        event.target.classList.add('checked-start')
+      }
+      // 存在开始标记但不存在结束标记
+      if (isExistStartFlag && !isExistEnd) {
+        let startIndex, endIndex;
+        startIndex = startItemIndex > endItemIndex ? endItemIndex : startItemIndex;
+        endIndex = startItemIndex > endItemIndex ? startItemIndex : endItemIndex;
+        for (let j = startIndex; j <= endIndex; j++){
+          let item = event.target.parentElement.children[j];
+          item.classList.add('click-bg-color')
+        }
+        event.target.classList.add('checked-end')
+      }else {
+        event.target.classList.add('click-bg-color')
+        event.target.classList.add('checked-start')
+      }
+    }
+  }
+})
+
+</script>
+</body>
+</html>
